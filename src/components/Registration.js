@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import {
     BrowserRouter as
-    
-    Link
+
+        Link
 } from "react-router-dom"
 
 const Registration = () => {
@@ -15,21 +15,71 @@ const Registration = () => {
     }
     const [user, setUser] = useState(obj
     );
-
-    let name, value ;
-    
-
-
-
+    let name, value;
     const getUserData = (e) => {
         name = e.target.name;
-        value= e.target.value;
-        setUser({...user,[name]:value});
-        
+        value = e.target.value;
+        setUser({ ... user, [name]: value });
     }
- 
-    const postData =()=>{ }
-    
+
+    const postData = async (e) => {
+        e.preventDefault();
+        const {
+            first_name,
+            last_name,
+            email,
+            password,
+            confirm_password,
+        } = user;
+
+        if( first_name&&
+            last_name&&
+            email&&
+            password&&
+            confirm_password){
+                const resp = await fetch('https://madfoodie-71d76-default-rtdb.firebaseio.com/madfoodie.json', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(
+                        {
+                            first_name,
+                            last_name,
+                            email,
+                            password,
+                            confirm_password,
+                        }
+                    )
+                });
+                if (resp) {
+                    setUser(
+                        {
+                            first_name: "",
+                            last_name: "",
+                            email: "",
+                            password: "",
+                            confirm_password: "",
+        
+                        }
+                    )
+        
+                    alert("Data Successfully stored.")
+                }
+
+        }
+        else{
+            alert("Please fill all details\n");
+
+        }
+
+       
+
+
+
+
+    }
+
     return (
         <div>
             <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
@@ -76,7 +126,7 @@ const Registration = () => {
                                         </div>
                                     </div>
 
-                                        <input type="submit" value="Register" className=" btn-info btn-block " onClick={postData}/><br />
+                                    <input type="submit" value="Register" className=" btn-info btn-block " onClick={postData} /><br />
                                     <Link to="/" className="link-login">Already have an account</Link>
 
                                 </form>
